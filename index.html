@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Totem</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="totem.js"></script>
+    <!-- <script type="text/javascript" src="TimTurkTools.js"></script> -->
+    <!--<script src="min.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script type="text/javascript">
+
+    // Posted on github
+
+
+
+        $(document).ready(function () {
+
+            $('#submit1').click(function (event) {
+                event.preventDefault();
+                var taskcode = genCode(8);
+                // alert("sending data");
+                // call this ajax functiona after any event like a form submit, like here
+                $('#submit1').html("Please Wait...");
+                $("#submit1").attr("disabled", true);
+                $.ajax({
+                    data: {
+                        //setup the varibles you want to send to submit.php
+
+                        data: dataCSV,
+                        age: $('#age').val(),
+                        email: $('#email').val(),
+                        gender: $("input[name='gender']:checked").val(),
+                        handedness: $("input[name='handedness']:checked").val(),
+                        q1: $('#q1').val(),
+                        q2: $('#q2').val(),
+                        q3: $("input[name='q3']:checked").val(),
+                        q4: $("input[name='q4']:checked").val(),
+                        code: taskcode
+                    },
+                    type: 'POST',
+                    url: 'submit.php'
+                }).done(function (data) {
+                    $('#done').hide();
+                    $('#success').show();
+                    $('#success').text(data);
+                    // alert(data);
+                    console.log(data);
+                });
+
+            })
+
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <form method="POST">
+
+        <input type="hidden" name="experimentType" id="experimentType" value="">
+        <input type="hidden" name="correctRate" id="correctRate" value="">
+        <input type="hidden" name="dataCSV" id="dataCSV" value="">
+        <input type="submit" name="hiddenSubmit" id="hiddenSubmit" value="Submit" style="display: none">
+        <div id="questions">
+            <br><br>
+            <table>
+                <tr>
+                    <td><label for="email"><b>Enter your email: </b></label></td>
+                    <td><input type="email" name="email" id="email" value=""></td>
+                </tr>
+                <tr>
+                    <td><label for="age"><b>Enter your age: </b></label></td>
+                    <td><input type="number" name="age" id="age" value=""></td>
+                </tr>
+
+                <tr>
+                    <td><b>Gender: </b></td>
+                    <td>
+                        <input type="radio" name="gender" id="male" value="male">
+                        <label for="male">Male</label>
+                        <input type="radio" name="gender" id="female" value="female">
+                        <label for="female">Female</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Handedness: </b></td>
+                    <td>
+                        <input type="radio" name="handedness" id="leftHanded" value="left"><label
+                            for="leftHanded">Left-handed</label>
+
+                        <input type="radio" name="handedness" id="rightHanded" value="right"><label
+                            for="rightHanded">Right-handed</label>
+                    </td>
+                </tr>
+
+            </table><br>
+            <center>
+                <p><b>Note:</b> After you click continue, the window will change into fullscreen mode. <br>Please don't
+                    exit
+                    as
+                    experiment
+                    will be performed in full screen mode.</p>
+                <kbd id="formContinue" class="button noselect">Continue</kbd>
+
+            </center>
+        </div>
+
+
+
+        <center>
+            <div id="done">
+                <br><br>
+                <p>Thank you for your participation! Before you leave,
+                    we have a few quick questions for you, it will not take more than a minute!<br><br>
+                    Query 1: What do you think the “real” purpose of this experiment is? (feel free to guess)</p>
+                <textarea name="q1" id="q1" rows="5" cols="60"></textarea>
+
+
+                <p>Query 2: Did you notice anything interesting or weird about this experiment at all?</p>
+                <textarea name="q2" id="q2" rows="5" cols="60"></textarea>
+
+
+                <p>Query 3: Prior to this experiment, were you aware of the hidden arrow inside the FedEx logo?</p>
+                <input type="radio" name="q3" id="q3" value="Yes">
+                <label for="Yes">Yes</label>
+                <input type="radio" name="q3" id="q3" value="No">
+                <label for="No">No</label>
+
+
+                <p>Query 4: During this experiment, did you notice any white arrow hidden inside the symbols?</p>
+                <input type="radio" name="q4" id="q4" value="No">
+                <label for="No">No</label>
+                <input type="radio" name="q4" id="q4" value="Yes (since the beginning)">
+                <label for="Yes (since the beginning)">Yes (since the beginning)</label>
+                <input type="radio" name="q4" id="q4" value="Yes (towards the end)">
+                <label for="Yes (towards the end)">Yes (towards the end)</label>
+
+
+                <p>This is the end, thank you for your participation! We hope you had fun!
+                    <br>You will see your task code pop up on your screen as you press the submit button below. The task
+                    code is also sent to your email (Do check the spam folder in case you don’t find it in the inbox).
+                    <br>
+                    Please input this code into your mTurk work page.</p>
+                <br>
+
+                <button type="submit" id="submit1" class="btn">Submit</button>
+            </div>
+        </center>
+
+    </form>
+
+    <div id="success" display='none'></div>
+
+    <div id="wait"></div>
+
+
+
+    <p id="count"></p>
+    <p id="countdown"></p>
+    <div id="targetBox">+</div>
+
+    <img id="totem" src="" alt="Totem">
+
+
+    <div id="LeMark">!</div>
+    <div id="ReMark">!</div>
+
+    <div id="buttons">
+        <kbd id="button1" class="button noselect"></kbd>
+        <kbd id="button2" class="button noselect"></kbd>
+    </div>
+
+    <p id="startExp">Press <kbd class="button noselect">M</kbd> for next slide</p>
+    <img id="instructions" src="" align="middle">
+</body>
+
+</html>
